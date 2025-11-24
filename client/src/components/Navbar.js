@@ -2,11 +2,13 @@ import React, { useState, useRef, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { logout } from "../apis/auth.api";
+import { useNotification } from "../context/NotificationContext";
 
 const Navbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch();
+  const { cartCount } = useNotification();
 
   const user = useSelector((state) => state.user.user);
 
@@ -61,7 +63,8 @@ const Navbar = () => {
       </div>
 
       <div className="nav-right" ref={dropdownRef}>
-        <div className="user-cart" onClick={()=>navigate('/user-cart')}>
+        <div className="user-cart" onClick={() => navigate("/user-cart")}>
+          {cartCount > 0 && <div className="notification">{cartCount}</div>}
           <i class="fa-solid fa-cart-arrow-down"></i>
         </div>
         <div className="user-profile" onClick={handleUserClick}>

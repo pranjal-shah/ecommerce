@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import socket from "../socket";
+import { useNotification } from "../context/NotificationContext";
 import { useLocation, useNavigate } from "react-router-dom";
 import { getProductDetails } from "../apis/product.api";
 import { setCartItem } from "../apis/cart.api";
@@ -10,6 +12,7 @@ const ProductDetail = () => {
   const user = useSelector((state) => state.user.user);
   const { state } = useLocation();
   const navigate = useNavigate();
+  const { cartCount } = useNotification();
   const product = state.product;
   const [quantity, setQuantity] = useState(1);
   const [productDetails, setProductDetails] = useState({});
@@ -67,6 +70,7 @@ const ProductDetail = () => {
         user_id: user.id,
       };
       console.log("cartItemPayload: ", cartItemPayload);
+      socket.emit("add-cart", cartCount);
       await setCartItem(cartItemPayload);
     } catch (error) {
       console.log("Error Adding Product to Cart", error);
@@ -154,7 +158,10 @@ const ProductDetail = () => {
                 onChange={(e) => setQuantity(e.target.value)}
               />
 
-              <button className="add-cart-btn btn btn-primary" onClick={handleAddToCart}>
+              <button
+                className="add-cart-btn btn btn-primary"
+                onClick={handleAddToCart}
+              >
                 ADD TO CART
               </button>
 

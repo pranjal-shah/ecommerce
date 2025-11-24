@@ -3,13 +3,16 @@ import { useSelector } from "react-redux";
 import { getAllCartItems, removeCartItem } from "../apis/cart.api";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import { useNotification } from "../context/NotificationContext";
 
 const Cart = () => {
   const user_id = useSelector((state) => state.user.user?.id);
+  const { setCartCount } = useNotification();
   const [cartItems, setCartItems] = useState([]);
 
   useEffect(() => {
     if (user_id) {
+      setCartCount(0);
       fetchCartItems();
     }
   }, [user_id]);
